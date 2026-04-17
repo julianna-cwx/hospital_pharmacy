@@ -1,0 +1,181 @@
+\documentclass{beamer}
+\usepackage[UTF8]{ctex}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+% ===== 极简风格 =====
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{} % 去掉右下角按钮
+\setbeamertemplate{footline}[frame number] % 只保留页码
+
+% 标题信息
+\title{Pharmaceutical Reform and Pharmacy Entry: Evidence from Hospitals in China}
+\author{Wenxia Chen}
+\date{2026}
+
+\begin{document}
+
+% ================= 标题页 =================
+\frame{\titlepage}
+
+% ================= Empirical Strategy =================
+\begin{frame}{Empirical Strategy: TWFE}
+
+\[
+Y_{ict} = \beta_0+\beta_1 Reform_{ct} + \delta_i + \delta_t + \epsilon_{ict}
+\]
+
+\vspace{0.4cm}
+
+\begin{itemize}
+    \item $Y_{ict}$: Number of pharmacies around hospital $i$ in county $c$ at time $t$
+    \item $Reform_{ct}$: Policy exposure at the county-year level
+    \item $\delta_i$: Hospital fixed effects
+    \item $\delta_t$: Year fixed effects
+\end{itemize}
+
+\vspace{0.4cm}
+
+\centering
+\textbf{Traditional TWFE may be biased under staggered adoption}
+
+\end{frame}
+
+\begin{frame}{Empirical Strategy: CS-DID}
+
+\[
+ATT(g,t) = \mathbb{E}[Y_t(1) - Y_t(0) \mid G = g]
+\]
+
+\vspace{0.4cm}
+
+\begin{itemize}
+    \item $g$: First year of reform (cohort)
+    \item $t$: Year
+    \item Compare treated units with not-yet-treated units
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{itemize}
+    \item Allows for heterogeneous treatment effects
+    \item Avoids bias from two-way fixed effects under staggered adoption
+\end{itemize}
+
+\vspace{0.4cm}
+
+\centering
+\textbf{Estimate dynamic and cohort-specific treatment effects}
+
+\end{frame}
+
+% ================= Baseline DID (Hospital Cluster) =================
+\begin{frame}{Baseline DID Results: TWFE (Hospital Cluster)}
+
+\textbf{OLS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals 
+    \item Sample: score=10 | score=8
+    \item Fixed effects: Hospital and year
+    \item Standard errors: clustered at hospital level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+did & -0.433*** & -0.942*** & -1.101* \\
+ & (0.103) & (0.263) & (0.449) \\
+\midrule
+N & 193010 & 193010 & 193010 \\
+R-sq & 0.884 & 0.895 & 0.903 \\
+\bottomrule
+\end{tabular}
+
+\end{frame}
+
+% ================= Baseline DID (County Cluster) =================
+\begin{frame}{Baseline DID Results: TWFE (County Cluster)}
+
+\textbf{OLS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals 
+    \item Fixed effects: Hospital and year
+    \item Standard errors: clustered at county level  
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+did & -0.433** & -0.947* & -1.113 \\
+ & (0.161) & (0.441) & (0.776) \\
+\midrule
+N & 192868 & 192868 & 192868 \\
+R-sq & 0.884 & 0.895 & 0.903 \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Baseline DID Results: CS-DID}
+\textbf{Callaway and Sant’Anna}
+\begin{itemize}
+    \item Standard errors clustered at the hospital level
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Baseline DID Results: PPML}
+\textbf{Callaway and Sant’Anna}
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: Hospital and year
+    \item Standard errors clustered at the hospital level
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Event Study: TWFE}
+\textbf{TWFE}
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: Hospital and year
+    \item Standard errors clustered at the hospital level
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Event Study: CS-DID}
+\textbf{Callaway and Sant’Anna}
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: Hospital and year
+    \item Standard errors clustered at the hospital level
+\end{itemize}
+\end{frame}
+
+% ================= Summary =================
+\begin{frame}{Summary}
+
+\begin{itemize}
+    \item DID: Positive and statistically significant effect
+    \item Event Study: No pre-trend, supporting causal inference
+\end{itemize}
+
+\vspace{0.6cm}
+
+\centering
+\textbf{The reform increases pharmacy entry around hospitals}
+
+\end{frame}
+
+\end{document}

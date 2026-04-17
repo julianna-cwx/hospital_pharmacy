@@ -1,0 +1,655 @@
+\documentclass{beamer}
+
+\usepackage[UTF8]{ctex}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+% ===== 极简风格 =====
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{} % 去掉右下角按钮
+\setbeamertemplate{footline}[frame number] % 只保留页码
+
+% 标题信息
+\title{Pharmaceutical Reform and Pharmacy Entry: Evidence from Hospitals in China}
+\author{Wenxia Chen}
+\date{April 15,2026}
+
+\begin{document}
+
+% ================= 标题页 =================
+\frame{\titlepage}
+\begin{frame}{Distribution of Policy Adoption Years}
+
+\centering
+\footnotesize
+
+\begin{tabular}{lccc}
+\hline
+\hline
+Policy Year & Frequency & Percent (\%) & Cumulative (\%) \\
+\hline
+Never treated (0) & 86,027 & 34.37 & 34.37 \\
+2012 & 6,494 & 2.59 & 36.97 \\
+2013 & 1,620 & 0.65 & 37.62 \\
+2014 & 34,471 & 13.77 & 51.39 \\
+2015 & 43,131 & 17.23 & 68.62 \\
+2016 & 16,619 & 6.64 & 75.26 \\
+2017 & 61,904 & 24.74 & 100.00 \\
+\hline
+Total & 250,266 & 100.00 & \\
+\hline
+\hline
+\end{tabular}
+
+
+
+\end{frame}
+
+
+\begin{frame}{Distribution of Pharmacy Density Around Hospitals}
+
+\centering
+
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{pharmacy_count_1km_density.png}
+
+{\footnotesize (a) 1km}
+\end{minipage}
+\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{pharmacy_count_2km_density.png}
+
+{\footnotesize (b) 2km}
+\end{minipage}
+\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{pharmacy_count_3km_density.png}
+
+{\footnotesize (c) 3km}
+\end{minipage}
+
+\vspace{0.5em}
+\footnotesize
+Note: Distribution is highly right-skewed with mass at zero.
+
+\end{frame}
+% ================= Empirical Strategy =================
+\begin{frame}{Empirical Strategy:TWFE}
+
+\[
+Y_{ict} = \beta_0+\beta_1 Reform_{ct} + \delta_i + \delta_t + \epsilon_{ict}
+\]
+
+\vspace{0.4cm}
+
+\begin{itemize}
+    \item $Y_{ict}$: Number of pharmacies around hospital $i$ in county $c$ at time $t$
+    \item $Reform_{ct}$: Policy exposure at the county-year level
+    \item $\delta_i$: hospital fixed effects
+    \item $\delta_t$: Year fixed effects
+\end{itemize}
+
+\vspace{0.4cm}
+
+\centering
+\textbf{\textbf{Traditional TWFE may be biased under staggered adoption}}
+
+\end{frame}
+
+\begin{frame}{Empirical Strategy: CS-DID}
+
+\[
+ATT(g,t) = \mathbb{E}[Y_t(1) - Y_t(0) \mid G = g]
+\]
+
+\vspace{0.4cm}
+
+\begin{itemize}
+    \item $g$: First year of reform (cohort)
+    \item $t$: Year
+    \item Compare treated units with not-yet-treated units
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{itemize}
+    \item Allows for heterogeneous treatment effects
+    \item Avoids bias from two-way fixed effects under staggered adoption
+\end{itemize}
+
+\vspace{0.4cm}
+
+\centering
+\textbf{Estimate dynamic and cohort-specific treatment effects}
+
+\end{frame}
+
+
+% ================= Baseline DID =================
+\begin{frame}{Baseline DID Results:TWFE}
+
+\textbf{OLS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals 
+    \item Sample: score=10 | score=8
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  hospital level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\hline
+did & -0.433*** & -0.942*** & -1.101* \\
+ & (0.103) & (0.263) & (0.449) \\
+\hline
+N & 193010 & 193010 & 193010 \\
+R-sq & 0.884 & 0.895 & 0.903 \\
+\hline
+\hline
+\end{tabular}
+\end{frame}
+
+
+% ========== OLS第二个回归结果（county level)==========
+\begin{frame}{Baseline DID Results:TWFE}
+
+\textbf{OLS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals 
+    \item Sample: score=10 | score=8
+    \item Fixed effects: Hospital and year
+    \item Standard errors : clustered at  county level  
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\hline
+did & -0.433** & -0.947* & -1.113 \\
+ & (0.161) & (0.441) & (0.776) \\
+\hline
+N & 192868 & 192868 & 192868 \\
+R-sq & 0.884 & 0.895 & 0.903 \\
+\hline
+\hline
+\end{tabular}
+
+\end{frame}
+
+% ========== CS-DID回归结果（id level)==========
+\begin{frame}{Baseline DID Results: CS-DID}
+
+\textbf{Callaway and Sant'Anna(2021)}
+
+\begin{itemize}
+    \item Outcome model  : least squares
+    \item Control: never treated
+    \item Treatment model: inverse probability
+    \item Standard errors : clustered at  hospital level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+ATT & -0.0736  &  -.320526      &    -.5840457      \\
+    & (0.0985) &   (.2412168)       &  (.4028106)      \\
+\midrule
+N   & 124137   & 124137   & 124137  \\
+\bottomrule
+\end{tabular}
+
+
+\end{frame}
+
+% ========== CS-DID回归结果（county level)==========
+\begin{frame}{Baseline DID Results: CS-DID}
+
+\textbf{Callaway and Sant'Anna(2021)}
+
+\begin{itemize}
+    \item Outcome model  : least squares
+    \item Control: never treated
+    \item Treatment model: inverse probability
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+ATT &  -.0735517  &   -.320526       &    -.5840457      \\
+    & (.0985356) &   ( .2412168)       &  (.4028106 )      \\
+\midrule
+N   &  124137   & 124137   & 124137  \\
+\bottomrule
+\end{tabular}
+
+
+\end{frame}
+% ========== PPML回归结果（id level)==========
+
+\begin{frame}{Baseline DID Results: PPML}
+
+\textbf{PPML}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals
+    \item Fixed effects: hospital and year
+    \item Sample: score=10 | score=8
+    \item Standard errors : clustered at hospital level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\hline
+did & 0.042*** & 0.049*** & 0.058*** \\
+ & (0.009) & (0.009) & (0.009) \\
+\hline
+N & 173450 & 181287 & 183995 \\
+\hline
+\hline
+\end{tabular}
+
+\end{frame}
+
+% ========== PPML回归结果（county_id level)==========
+
+\begin{frame}{Baseline DID Results: PPML}
+
+\textbf{PPML}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals
+    \item Fixed effects: hospital and year
+    \item Sample: score=10 | score=8
+    \item Standard errors : clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\hline
+did & 0.043*** & 0.050*** & 0.058*** \\
+ & (0.016) & (0.015) & (0.016) \\
+\hline
+N &  173319  & 181145 &  183853  \\
+\hline
+\hline
+\end{tabular}
+
+\end{frame}
+
+
+
+
+% ========== Event Study:PPML==========
+\begin{frame}{Event Study:PPML}
+
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ppml_1km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:PPML}
+
+
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ppml_2km.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Event Study:PPML}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ppml_3km.png}
+\end{center}
+
+\end{frame}
+
+% ========== Event Study:TWFE==========
+\begin{frame}{Event Study:TWFE}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ols_1km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:TWFE}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ols_2km.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Event Study:TWFE}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ols_3km.png}
+\end{center}
+
+\end{frame}
+
+% ========== Event Study:Callaway & Sant’Anna==========
+\begin{frame}{Event Study:CS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_event_1km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:CS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_event_2km.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Event Study:CS}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_event_3km.png}
+\end{center}
+
+\end{frame}
+
+
+
+% ================= Mechanism=================
+\begin{frame}{Mechanism: Chain Pharmacies(OLS)}
+
+\begin{itemize}
+    \item Outcome: Chain pharmacies entry around hospitals 
+    \item Fixed effects: hospital and year
+    \item Standard errors: clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & Chain pharmacy $\sim$1km & Chain pharmacy $\sim$2km & Chain pharmacy $\sim$3km \\
+\hline
+did & 0.012 & 0.382 & 1.017* \\
+    & (0.088) & (0.261) & (0.479) \\
+\hline
+N   & 188,410 & 188,410 & 188,410 \\
+R-sq & 0.682  & 0.719  & 0.733  \\
+\hline
+\hline
+\end{tabular}
+
+
+
+\end{frame}
+
+
+\begin{frame}{Mechanism: Non-Chain Pharmacies}
+
+\begin{itemize}
+    \item Outcome: Non-chain pharmacies entry around hospitals 
+    \item Fixed effects: hospital and year
+    \item Standard errors: clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & Non-chain pharmacy $\sim$1km & $\sim$2km & $\sim$3km \\
+\hline
+did & -0.537*** & -1.553*** & -2.495*** \\
+    & (0.117)   & (0.310)   & (0.538)   \\
+\hline
+N   & 188,410   & 188,410   & 188,410   \\
+R-sq & 0.828    & 0.833     & 0.836     \\
+\hline
+\hline
+\end{tabular}
+
+
+\end{frame}
+
+\begin{frame}{Mechanism: Chain Pharmacies (Share)}
+
+\begin{itemize}
+    \item Outcome: Share of chain pharmacies around hospitals 
+    \item Fixed effects: hospital and year
+    \item Standard errors: clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & Chain share $\sim$1km & Chain share $\sim$2km & Chain share $\sim$3km \\
+\hline
+did & 0.019*** & 0.021*** & 0.022*** \\
+    & (0.004)  & (0.004)  & (0.004)  \\
+\hline
+N   & 159,005  & 170,604  & 174,613  \\
+R-sq & 0.788   & 0.840    & 0.851    \\
+\hline
+\hline
+\end{tabular}
+
+
+\end{frame}
+
+\begin{frame}{Mechanism: Chain Pharmacies (PPML)}
+
+\begin{itemize}
+    \item Outcome: Chain pharmacies around hospitals (count)
+    \item Estimator: PPML with hospital and year fixed effects
+    \item Standard errors: clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & Chain pharmacy $\sim$1km & Chain pharmacy $\sim$2km & Chain pharmacy $\sim$3km \\
+\hline
+did & 0.334*** & 0.353*** & 0.358*** \\
+    & (0.088)  & (0.082)  & (0.079)  \\
+\hline
+N   & 139,926  & 149,752  & 153,318  \\
+\hline
+\hline
+\end{tabular}
+
+
+\end{frame}
+
+\begin{frame}{Mechanism: Non-chain Pharmacies (PPML)}
+
+\begin{itemize}
+    \item Outcome: Non-chain pharmacies around hospitals (count)
+    \item Estimator: PPML with hospital and year fixed effects
+    \item Standard errors: clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & Non-chain $\sim$1km & Non-chain $\sim$2km & Non-chain $\sim$3km \\
+\hline
+did & 0.007 & 0.010 & 0.016 \\
+    & (0.013) & (0.013) & (0.013) \\
+\hline
+N   & 171,807 & 180,668 & 183,617 \\
+\hline
+\hline
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Mechanism: Chain Pharmacies (Share, PPML)}
+
+\begin{itemize}
+    \item Outcome: Share of chain pharmacies around hospitals
+    \item Estimator: PPML with hospital and year fixed effects
+    \item Standard errors: clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & Chain share $\sim$1km & Chain share $\sim$2km & Chain share $\sim$3km \\
+\hline
+did & 0.205*** & 0.229*** & 0.242*** \\
+    & (0.061)  & (0.057)  & (0.057)  \\
+\hline
+N   & 129,869  & 141,824  & 146,097  \\
+\hline
+\hline
+\end{tabular}
+
+\end{frame}
+% ================= Summary =================
+\begin{frame}{Summary}
+
+\begin{itemize}
+    \item DID: OLS negative and significant ,CS  negative but insignificant ,PPML positive and significant 
+    \item Event Study: PPML, supporting causal inference
+    \item  How to adjust event study 
+\end{itemize}
+
+\vspace{0.6cm}
+
+\centering
+\textbf{The reform increases pharmacy entry around hospitals}
+
+\end{frame}
+
+\end{document}
