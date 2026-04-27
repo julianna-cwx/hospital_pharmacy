@@ -5,6 +5,13 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 
+% ===== 更新slides时注意终端bash输入 =====
+% git add .
+% git commit -m "update: event study figure"
+% "add: DID specification slide"
+% fix: typo in model
+% git push
+
 % ===== 极简风格 =====
 \usetheme{default}
 \usecolortheme{default}
@@ -14,12 +21,56 @@
 % 标题信息
 \title{Pharmaceutical Reform and Pharmacy Entry: Evidence from Hospitals in China}
 \author{Wenxia Chen}
-\date{April 15,2026}
+\date{April ,2026}
 
 \begin{document}
 
+
+
 % ================= 标题页 =================
+
+
 \frame{\titlepage}
+
+% ================= 研究背景 =================
+\begin{frame}{Institutional Background}
+
+China's pharmaceutical reform aims to eliminate the long-standing 
+“drug mark-up” mechanism in public hospitals.
+
+\begin{itemize}
+    \item \textbf{Financing Reform:}
+    Public hospitals previously relied on three revenue sources:
+    service fees, drug mark-ups, and government subsidies. 
+    The reform removes drug mark-ups, shifting the system to a 
+    two-channel structure: service fees and government subsidies.
+
+    \item \textbf{Price Adjustment:}
+    The policy eliminates drug mark-ups while increasing the prices 
+    of medical services, including consultation, surgery, and nursing, 
+    to better reflect the value of medical labor.
+
+    \item \textbf{Complementary Policies:}
+    The reform is accompanied by changes in health insurance payment 
+    methods and strengthened government responsibility in hospital financing.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Reform Rollout and Scope}
+
+
+The reform was first implemented as a pilot program targeting county-level public hospitals. It introduced a comprehensive set of changes, including reforms to hospital governance, financing mechanisms, personnel and compensation systems, drug procurement and supply, as well as the medical pricing system.
+ \begin{itemize}
+ \item The pilot was launched in 2012 and covered approximately 300 counties (or county-level cities).
+
+ \item Following the pilot phase, the reform was gradually expanded nationwide and was fully implemented by the end of September 2017. All public hospitals adopted the reform, with a universal removal of drug mark-ups, except for traditional Chinese medicine herbal decoctions.
+
+\item{The staggered rollout of the reform provides quasi-experimental variation for empirical analysis.}
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}{Distribution of Policy Adoption Years}
 
 \centering
@@ -30,7 +81,7 @@
 \hline
 Policy Year & Frequency & Percent (\%) & Cumulative (\%) \\
 \hline
-Never treated (0) & 86,027 & 34.37 & 34.37 \\
+Never treated (private hospitals) & 86,027 & 34.37 & 34.37 \\
 2012 & 6,494 & 2.59 & 36.97 \\
 2013 & 1,620 & 0.65 & 37.62 \\
 2014 & 34,471 & 13.77 & 51.39 \\
@@ -43,9 +94,25 @@ Total & 250,266 & 100.00 & \\
 \hline
 \end{tabular}
 
+\end{frame}
 
+% ================= 文献综述部分 =================
+
+% ================= 数据 =================
+\begin{frame}{Data Sources}
+
+\textbf{Hospital Data.} Information on hospitals is obtained from business registration records, including hospital name, classification (level), industry code, province, county, and geographic coordinates.
+
+\medskip
+
+\textbf{Pharmacy Data.} Pharmacy data are collected from Dianping, including merchant name, industry classification, geographic coordinates, and an indicator for chain affiliation.
+
+\medskip
+
+\textbf{Reform Data.} Information on the timing and implementation of the reform is compiled from official government policy documents and related reports.
 
 \end{frame}
+
 
 
 \begin{frame}{Distribution of Pharmacy Density Around Hospitals}
@@ -82,7 +149,7 @@ Note: Distribution is highly right-skewed with mass at zero.
 \begin{frame}{Empirical Strategy:TWFE}
 
 \[
-Y_{ict} = \beta_0+\beta_1 Reform_{ct} + \delta_i + \delta_t + \epsilon_{ict}
+Y_{ict} = \beta_0+\beta_1 Reform_{ct}+\beta X_{ct} + \delta_i + \delta_t + \epsilon_{ict}
 \]
 
 \vspace{0.4cm}
@@ -90,6 +157,7 @@ Y_{ict} = \beta_0+\beta_1 Reform_{ct} + \delta_i + \delta_t + \epsilon_{ict}
 \begin{itemize}
     \item $Y_{ict}$: Number of pharmacies around hospital $i$ in county $c$ at time $t$
     \item $Reform_{ct}$: Policy exposure at the county-year level
+    \item $X_{ct}$: Control variables at the county-year level
     \item $\delta_i$: hospital fixed effects
     \item $\delta_t$: Year fixed effects
 \end{itemize}
@@ -465,6 +533,220 @@ N &  173319  & 181145 &  183853  \\
 \end{frame}
 
 
+\begin{frame}{Event Study:CS +trend}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item trend : county year trend
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_trend_1km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:CS +trend}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item trend : county year trend
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_trend_2km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:CS +trend}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year 
+    \item trend : county year trend
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_trend_3km.png}
+\end{center}
+
+\end{frame}
+
+% ================= 百分比变化=================
+\begin{frame}{Change in Pharmacy Counts Around Treated Hospitals}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Radius} & \textbf{Pre-Reform Mean} & \textbf{Post-Reform Mean} & \textbf{Absolute Change} & \textbf{\% Change} \\
+\midrule
+1km & 7.95 & 11.26 & +3.31 & +41.6\% \\
+2km & 23.30 & 30.28 & +6.98 & +30.0\% \\
+3km & 41.14 & 50.34 & +9.19 & +22.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Interpretation}
+
+\begin{itemize}
+    \item Pharmacy counts around treated hospitals increased substantially after reform in raw levels.
+    \item Growth is strongest within 1km (+41.6\%), suggesting rapid pharmacy expansion near hospitals over time.
+    \item However, these are \textbf{before–after comparisons only} and do not net out broader market growth or secular trends.
+
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}{Causal Effect of Reform on Nearby Pharmacy Counts }
+
+\textbf{CS-DID Estimated Treatment Effects }
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Radius} & \textbf{ATE (Level Effect)} & \textbf{Pre-Reform Mean} & \textbf{Percent Effect} \\
+\midrule
+1km & -0.0736 & 7.95 & -0.93\% \\
+2km & -0.3205 & 23.30 & -1.38\% \\
+3km & -0.5840 & 41.14 & -1.42\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Interpretation}
+
+\begin{itemize}
+    \item Although raw before–after counts increased over time, CS-DID suggests this growth was slower than the counterfactual trend.
+    \item This implies reform may have weakened hospital-centered pharmacy agglomeration rather than reducing pharmacy growth in absolute terms.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textit{Percent Effect = ATE / Treated Pre-Reform Mean. Negative values indicate fewer pharmacies relative to the treated group’s own baseline.}
+
+\end{frame}
+
+
+%================= Intensive Margin=================
+\begin{frame}{Intensive Margin: OLS}
+
+
+\textbf{OLS Estimates (Positive-Pharmacy Hospitals Only)}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Radius} & \textbf{DID Coefficient} & \textbf{Std. Error}  \\
+\midrule
+1km & +0.457 & (0.242)  \\
+2km & +1.615* & (0.707)  \\
+3km & +2.955* & (1.315)  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Interpretation}
+
+\begin{itemize}
+    \item Conditional on hospitals already having pharmacy presence, reform is associated with \textbf{higher pharmacy counts}.
+    \item Reform may reduce pharmacy entry in marginal/zero-pharmacy areas,
+    \item But increase pharmacy concentration in already-developed markets.
+\end{itemize}  
+
+\end{frame}
+
+\begin{frame}{Intensive Margin: PPML}
+
+\textbf{PPML Estimates (Positive-Pharmacy Hospitals Only)}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Radius} & \textbf{PPML Coefficient} & \textbf{Std. Error} \\
+\midrule
+1km & +0.043** & (0.015) \\
+2km & +0.040** & (0.015) \\
+3km & +0.036* & (0.016) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Interpretation}
+
+\begin{itemize}
+    \item Among hospitals with sustained positive pharmacy presence, reform increased nearby pharmacy counts on the intensive margin.
+
+    \item Results suggest reform strengthened pharmacy expansion in existing markets rather than reducing incumbent pharmacy activity.
+    
+    \item Less entry in weak or zero-pharmacy markets,
+    \item Greater concentration where pharmacy ecosystems were already established.
+    
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Intensive Margin: Log(1+Y) OLS}
+
+\textbf{Log-OLS Estimates (Positive-Pharmacy Hospitals Only)}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Radius} & \textbf{Log Coefficient} & \textbf{Std. Error} \\
+\midrule
+1km & +0.038* & (0.016) \\
+2km & +0.049** & (0.017) \\
+3km & +0.044* & (0.018) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Interpretation}
+
+\begin{itemize}
+
+    \item Results closely align with PPML estimates, reinforcing intensive-margin expansion after reform.
+    \item Effects are strongest at 2–3km, suggesting pharmacy growth may have shifted outward beyond immediate hospital frontage.
+
+    \item Reduced new entry in weak markets。
+    \item Increased pharmacy density in mature local markets.
+   
+\end{itemize}
+
+
+
+\end{frame}
 
 % ================= Mechanism=================
 \begin{frame}{Mechanism: Chain Pharmacies(OLS)}
