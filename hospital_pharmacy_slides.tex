@@ -7,11 +7,12 @@
 
 % ===== 更新slides时注意终端bash输入 =====
 % git add .
-% git commit -m "update: event study figure"
+% git commit -m "update: event study/intensive margin "
 % git commit -m "add: background slide"
 %git commit -m "add: intensive margin slide"
 % 修改版本：
-%git tag -a v1.4-2026-04-27 -m "intensive margin completed"
+%git tag -a v1.5-2026-04-27 -m "baseline/event study/intensive margin completed"
+%git push origin main
 %git push origin --tags
 
 
@@ -204,38 +205,38 @@ ATT(g,t) = \mathbb{E}[Y_t(1) - Y_t(0) \mid G = g]
 
 
 % ================= Baseline DID =================
-\begin{frame}{Baseline DID Results:TWFE}
 
-\textbf{OLS}
+% ========== TWFE（county level)==========
+\begin{frame}{Summary of TWFE Results}
+
+\textbf{Key Findings}
 
 \begin{itemize}
-    \item Outcome: Pharmacy entry around hospitals 
-    \item Sample: score=10 | score=8
-    \item Fixed effects: hospital and year
-    \item Standard errors : clustered at  hospital level
+    \item Counts level
+    \begin{itemize}
+        \item TWFE  estimates: Negative and significant.
+        \item Including  trends: Negative but insignificant.
+        \item Parallel trend assumption: Not Satisfied
+    \end{itemize}
+
+    \item Log level
+    \begin{itemize}
+    \item TWFE  estimates: Negative but statistically insignificant.
+    \item Parallel trend assumption: Not Satisfied 
+    \end{itemize}
+
 \end{itemize}
 
-\vspace{0.5em}
-\centering
-\footnotesize
-\begin{tabular}{lccc}
-\hline
-\hline
- & (1) & (2) & (3) \\
- & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
-\hline
-did & -0.433*** & -0.942*** & -1.101* \\
- & (0.103) & (0.263) & (0.449) \\
-\hline
-N & 193010 & 193010 & 193010 \\
-R-sq & 0.884 & 0.895 & 0.903 \\
-\hline
-\hline
-\end{tabular}
+\textbf{Main  Problems}
+\begin{itemize}
+    \item Coefficient is negative,while PPML estimates are positive.
+    \item Parallel trend assumption is not satisfied.
+\end{itemize}
+
 \end{frame}
 
 
-% ========== OLS第二个回归结果（county level)==========
+
 \begin{frame}{Baseline DID Results:TWFE}
 
 \textbf{OLS}
@@ -267,76 +268,15 @@ R-sq & 0.884 & 0.895 & 0.903 \\
 
 \end{frame}
 
-% ========== CS-DID回归结果（id level)==========
-\begin{frame}{Baseline DID Results: CS-DID}
+\begin{frame}{Baseline DID Results: TWFE}
 
-\textbf{Callaway and Sant'Anna(2021)}
-
-\begin{itemize}
-    \item Outcome model  : least squares
-    \item Control: never treated
-    \item Treatment model: inverse probability
-    \item Standard errors : clustered at  hospital level
-\end{itemize}
-
-\vspace{0.5em}
-\centering
-\footnotesize
-\begin{tabular}{lccc}
-\toprule
- & (1) & (2) & (3) \\
- & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
-\midrule
-ATT & -0.0736  &  -.320526      &    -.5840457      \\
-    & (0.0985) &   (.2412168)       &  (.4028106)      \\
-\midrule
-N   & 124137   & 124137   & 124137  \\
-\bottomrule
-\end{tabular}
-
-
-\end{frame}
-
-% ========== CS-DID回归结果（county level)==========
-\begin{frame}{Baseline DID Results: CS-DID}
-
-\textbf{Callaway and Sant'Anna(2021)}
+\textbf{OLS(log+1)}
 
 \begin{itemize}
-    \item Outcome model  : least squares
-    \item Control: never treated
-    \item Treatment model: inverse probability
-    \item Standard errors : clustered at  county level
-\end{itemize}
-
-\vspace{0.5em}
-\centering
-\footnotesize
-\begin{tabular}{lccc}
-\toprule
- & (1) & (2) & (3) \\
- & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
-\midrule
-ATT &  -.0735517  &   -.320526       &    -.5840457      \\
-    & (.0985356) &   ( .2412168)       &  (.4028106 )      \\
-\midrule
-N   &  124137   & 124137   & 124137  \\
-\bottomrule
-\end{tabular}
-
-
-\end{frame}
-% ========== PPML回归结果（id level)==========
-
-\begin{frame}{Baseline DID Results: PPML}
-
-\textbf{PPML}
-
-\begin{itemize}
-    \item Outcome: Pharmacy entry around hospitals
-    \item Fixed effects: hospital and year
-    \item Sample: score=10 | score=8
-    \item Standard errors : clustered at hospital level
+    \item Outcome: Log of pharmacy entry around hospitals
+    \item Sample: score = 10 or score = 8
+    \item Fixed effects: Hospital and year
+    \item Standard errors: Clustered at the county level
 \end{itemize}
 
 \vspace{0.5em}
@@ -346,100 +286,16 @@ N   &  124137   & 124137   & 124137  \\
 \hline
 \hline
  & (1) & (2) & (3) \\
- & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+ & ln(pharmacy $\sim$ 1km) & ln(pharmacy $\sim$ 2km) & ln(pharmacy $\sim$ 3km) \\
 \hline
-did & 0.042*** & 0.049*** & 0.058*** \\
- & (0.009) & (0.009) & (0.009) \\
+did & -0.028 & -0.013 & -0.010 \\
+    & (0.015) & (0.019) & (0.021) \\
 \hline
-N & 173450 & 181287 & 183995 \\
-\hline
-\hline
-\end{tabular}
-
-\end{frame}
-
-% ========== PPML回归结果（county_id level)==========
-
-\begin{frame}{Baseline DID Results: PPML}
-
-\textbf{PPML}
-
-\begin{itemize}
-    \item Outcome: Pharmacy entry around hospitals
-    \item Fixed effects: hospital and year
-    \item Sample: score=10 | score=8
-    \item Standard errors : clustered at county level
-\end{itemize}
-
-\vspace{0.5em}
-\centering
-\footnotesize
-\begin{tabular}{lccc}
-\hline
-\hline
- & (1) & (2) & (3) \\
- & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
-\hline
-did & 0.043*** & 0.050*** & 0.058*** \\
- & (0.016) & (0.015) & (0.016) \\
-\hline
-N &  173319  & 181145 &  183853  \\
+N & 192,868 & 192,868 & 192,868 \\
+R-sq & 0.897 & 0.907 & 0.911 \\
 \hline
 \hline
 \end{tabular}
-
-\end{frame}
-
-
-
-
-% ========== Event Study:PPML==========
-\begin{frame}{Event Study:PPML}
-
-
-\begin{itemize}
-    \item Outcome: Pharmacy entry around hospitals (within 1km)
-    \item Fixed effects: hospital and year
-    \item Standard errors : clustered at  county level
-\end{itemize}
-
-\vspace{0.5em}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{parallel_ppml_1km.png}
-\end{center}
-
-\end{frame}
-
-\begin{frame}{Event Study:PPML}
-
-
-
-\begin{itemize}
-    \item Outcome: Pharmacy entry around hospitals (within 2km)
-    \item Fixed effects: hospital and year
-    \item Standard errors : clustered at  county level
-\end{itemize}
-
-\vspace{0.5em}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{parallel_ppml_2km.png}
-\end{center}
-
-\end{frame}
-
-
-\begin{frame}{Event Study:PPML}
-
-\begin{itemize}
-    \item Outcome: Pharmacy entry around hospitals (within 3km)
-    \item Fixed effects: hospital and year
-    \item Standard errors : clustered at  county level
-\end{itemize}
-
-\vspace{0.5em}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{parallel_ppml_3km.png}
-\end{center}
 
 \end{frame}
 
@@ -487,6 +343,211 @@ N &  173319  & 181145 &  183853  \\
 \begin{center}
 \includegraphics[width=0.8\textwidth]{parallel_ols_3km.png}
 \end{center}
+
+\end{frame}
+
+
+% ========== Event Study:TWFE(LOG)==========
+\begin{frame}{Event Study:TWFE}
+
+\begin{itemize}
+    \item Outcome: Log of Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ols_log_1km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:TWFE}
+
+\begin{itemize}
+    \item Outcome: Log of Pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ols_log_2km.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Event Study:TWFE}
+
+\begin{itemize}
+    \item Outcome: Log of Pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ols_log_3km.png}
+\end{center}
+
+\end{frame}
+
+
+% ========== CS-DID回归结果（county level)==========
+\begin{frame}{Summary of CS-DID Results}
+
+\textbf{Key Findings}
+
+\begin{itemize}
+    \item Counts level
+    \begin{itemize}
+        \item Estimates: Negative and insignificant.
+        \item Including  trends: Negative and insignificant.
+        \item Parallel trend assumption: Not Satisfied
+    \end{itemize}
+
+    \item Log level
+    \begin{itemize}
+    \item  Estimates: Positive and  significant.
+    \item Parallel trend assumption: Not Satisfied.
+    \end{itemize}
+
+\end{itemize}
+
+\textbf{Main  Problems}
+\begin{itemize}
+    \item Counts Coefficient is negative,while Log estimates are positive.
+    \item Parallel trend assumption is not satisfied.
+\end{itemize}
+
+\end{frame}
+
+
+
+% ========== CS-DID回归结果（county level)==========
+
+
+\begin{frame}{Baseline DID Results: CS-DID}
+
+\textbf{Callaway and Sant'Anna(2021)}
+
+\begin{itemize}
+    \item Outcome : insignificant negative
+    \item Control: never treated
+    \item Treatment model: inverse probability
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+ATT &  -0.074  &   -0.321       &    -0.584      \\
+    & (0.099) &   ( 0.241)       &  (0.403 )      \\
+\midrule
+N   &  124137   & 124137   & 124137  \\
+\bottomrule
+\end{tabular}
+
+
+\end{frame}
+
+% ========== CS-DID回归结果（log level)==========
+
+
+\begin{frame}{Baseline DID Results: CS-DID-Log}
+
+\textbf{Callaway and Sant'Anna(2021)}
+
+\begin{itemize}
+    \item Outcome : significant positive
+    \item Control: never treated
+    \item Treatment model: inverse probability
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+ATT &  0.039  &   0.059      &    0.06      \\
+    & (0.009) &   ( 0.01)       &  (0.01 )      \\
+\midrule
+N   &  124137   & 124137   & 124137  \\
+\bottomrule
+\end{tabular}
+
+
+\end{frame}
+
+% ========== CS-DID回归结果（Not yet)==========
+\begin{frame}{Baseline DID Results: CS-DID}
+
+\textbf{Callaway and Sant'Anna(2021)}
+
+\begin{itemize}
+    \item Outcome: insignificant negative
+    \item Control:  Not yet Treated
+    \item Treatment model: inverse probability
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+ATT &  -0.073  &   -0.348       &    -0.679      \\
+    & (0.097) &   ( 0.238)       &  (0.399)      \\
+\midrule
+N   &  124137   & 124137   & 124137  \\
+\bottomrule
+\end{tabular}
+
+
+\end{frame}
+
+
+% ========== CS-DID回归结果（Not yet Log)==========
+\begin{frame}{Baseline DID Results: CS-DID-Log}
+
+\textbf{Callaway and Sant'Anna(2021)}
+
+\begin{itemize}
+    \item Outcome: significant positive
+    \item Control:  Not yet Treated
+    \item Treatment model: inverse probability
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\midrule
+ATT &  0.04 &   0.06       &    0.63      \\
+    & (0.009) &   ( 0.01)       &  (0.012)      \\
+\midrule
+N   &  124137   & 124137   & 124137  \\
+\bottomrule
+\end{tabular}
+
 
 \end{frame}
 
@@ -586,72 +647,162 @@ N &  173319  & 181145 &  183853  \\
 
 \end{frame}
 
-% ================= 百分比变化=================
-\begin{frame}{Change in Pharmacy Counts Around Treated Hospitals}
 
-\begin{table}[htbp]
-\centering
-\small
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Radius} & \textbf{Pre-Reform Mean} & \textbf{Post-Reform Mean} & \textbf{Absolute Change} & \textbf{\% Change} \\
-\midrule
-1km & 7.95 & 11.26 & +3.31 & +41.6\% \\
-2km & 23.30 & 30.28 & +6.98 & +30.0\% \\
-3km & 41.14 & 50.34 & +9.19 & +22.3\% \\
-\bottomrule
-\end{tabular}
-\end{table}
 
-\vspace{0.3cm}
-
-\textbf{Interpretation}
+\begin{frame}{Event Study:CS-Log}
 
 \begin{itemize}
-    \item Pharmacy counts around treated hospitals increased substantially after reform in raw levels.
-    \item Growth is strongest within 1km (+41.6\%), suggesting rapid pharmacy expansion near hospitals over time.
-    \item However, these are \textbf{before–after comparisons only} and do not net out broader market growth or secular trends.
-
+    \item Outcome: Log of pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
 \end{itemize}
 
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_event_log_1km.png}
+\end{center}
 
 \end{frame}
 
-\begin{frame}{Causal Effect of Reform on Nearby Pharmacy Counts }
+\begin{frame}{Event Study:CS-Log}
 
-\textbf{CS-DID Estimated Treatment Effects }
+\begin{itemize}
+    \item Outcome:Log of pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
 
-\begin{table}[htbp]
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_event_log_2km.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Event Study:CS-Log}
+
+\begin{itemize}
+    \item Outcome: Log of pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{cs_event_log_3km.png}
+\end{center}
+
+\end{frame}
+
+
+% ========== PPML回归结果（county_id level)==========
+
+\begin{frame}{Summary of PPML Results}
+
+\textbf{Key Findings}
+
+\begin{itemize}  
+\item PPML  estimates: Positive and significant.
+\item Including  trends: Positive and significant.
+\item Parallel trend assumption: Satisfied
+\end{itemize}
+
+\textbf{Main  Problems}
+\begin{itemize}
+    \item Coefficient is Positive,while TEFE estimates are negative.
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Baseline DID Results: PPML}
+
+\textbf{PPML}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals
+    \item Fixed effects: hospital and year
+    \item Sample: score=10 | score=8
+    \item Standard errors : clustered at county level
+\end{itemize}
+
+\vspace{0.5em}
 \centering
-\small
+\footnotesize
 \begin{tabular}{lccc}
-\toprule
-\textbf{Radius} & \textbf{ATE (Level Effect)} & \textbf{Pre-Reform Mean} & \textbf{Percent Effect} \\
-\midrule
-1km & -0.0736 & 7.95 & -0.93\% \\
-2km & -0.3205 & 23.30 & -1.38\% \\
-3km & -0.5840 & 41.14 & -1.42\% \\
-\bottomrule
+\hline
+\hline
+ & (1) & (2) & (3) \\
+ & pharmacy\textasciitilde 1km & pharmacy\textasciitilde 2km & pharmacy\textasciitilde 3km \\
+\hline
+did & 0.041*** & 0.047*** & 0.055*** \\
+ & (0.016) & (0.015) & (0.016) \\
+\hline
+N &  177459  & 185543 &  188251  \\
+\hline
+\hline
 \end{tabular}
-\end{table}
-
-\vspace{0.3cm}
-
-\textbf{Interpretation}
-
-\begin{itemize}
-    \item Although raw before–after counts increased over time, CS-DID suggests this growth was slower than the counterfactual trend.
-    \item This implies reform may have weakened hospital-centered pharmacy agglomeration rather than reducing pharmacy growth in absolute terms.
-\end{itemize}
-
-\vspace{0.2cm}
-
-\textit{Percent Effect = ATE / Treated Pre-Reform Mean. Negative values indicate fewer pharmacies relative to the treated group’s own baseline.}
 
 \end{frame}
 
 
-%================= Intensive Margin=================
+
+% ========== Event Study:PPML==========
+\begin{frame}{Event Study:PPML}
+
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 1km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ppml_1km.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Event Study:PPML}
+
+
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 2km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ppml_2km.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Event Study:PPML}
+
+\begin{itemize}
+    \item Outcome: Pharmacy entry around hospitals (within 3km)
+    \item Fixed effects: hospital and year
+    \item Standard errors : clustered at  county level
+\end{itemize}
+
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{parallel_ppml_3km.png}
+\end{center}
+
+\end{frame}
+
+
+% ================= 百分比变化=================
+
+%================= Intensive Margin(去掉含0的医院)=================
 \begin{frame}{Intensive Margin: OLS}
 
 
@@ -680,6 +831,27 @@ N &  173319  & 181145 &  183853  \\
     \item Reform may reduce pharmacy entry in marginal/zero-pharmacy areas,
     \item But increase pharmacy concentration in already-developed markets.
 \end{itemize}  
+
+\end{frame}
+
+
+\begin{frame}{Intensive Margin: CS-DID}
+
+\textbf{Log-OLS Estimates (Positive-Pharmacy Hospitals Only)}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Radius} & \textbf{Log Coefficient} & \textbf{Std. Error} \\
+\midrule
+1km & +0.609*** & (0.015) \\
+2km & +1.286** & (0.398) \\
+3km & +1.239* & (0.709) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{frame}
 
@@ -749,7 +921,26 @@ N &  173319  & 181145 &  183853  \\
    
 \end{itemize}
 
+\end{frame}
 
+
+\begin{frame}{Intensive Margin: Log(1+Y) CS-DID}
+
+\textbf{CS-DID Estimates (Positive-Pharmacy Hospitals Only)}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Radius} & \textbf{Log Coefficient} & \textbf{Std. Error} \\
+\midrule
+1km & +0.070*** & (0.010) \\
+2km & +0.088*** & (0.0096) \\
+3km & +0.082*** & (0.0090) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{frame}
 
@@ -779,8 +970,6 @@ R-sq & 0.682  & 0.719  & 0.733  \\
 \hline
 \hline
 \end{tabular}
-
-
 
 \end{frame}
 
